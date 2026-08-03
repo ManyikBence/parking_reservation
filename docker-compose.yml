@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: parking-db
+    environment:
+      POSTGRES_DB: parkingdb
+      POSTGRES_USER: parkinguser
+      POSTGRES_PASSWORD: parkingpassword
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U parkinguser -d parkingdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: parking-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/parkingdb
+      SPRING_DATASOURCE_USERNAME: parkinguser
+      SPRING_DATASOURCE_PASSWORD: parkingpassword
+    depends_on:
+      postgres:
+        condition: service_healthy
