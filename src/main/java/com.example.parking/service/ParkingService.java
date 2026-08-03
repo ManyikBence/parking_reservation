@@ -58,7 +58,7 @@ public class ParkingService {
         if (!spotRepository.existsById(spotId)) {
             throw new ResourceNotFoundException("Parking spot not found with id: " + spotId);
         }
-        return reservationRepository.findByParkingSpotIdAndCancelledFalseOrderByStartTimeAsc(spotId)
+        return reservationRepository.findByParkingSpotIdOrderByStartTimeAsc(spotId)
                 .stream()
                 .map(this::mapToDto)
                 .toList();
@@ -66,15 +66,10 @@ public class ParkingService {
 
     @Transactional
     public void cancelReservation(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with id: " + reservationId));
-
-        if (reservation.isCancelled()) {
-            throw new InvalidReservationException("Reservation is already cancelled");
+        if (!reservationRepository.existsById(reservationId)) {
+            throw new ResourceNotFoundException("Reservation not found with id: " + reservationId);
         }
-
-        reservation.setCancelled(true);
-        reservationRepository.save(reservation);
+        reservationRepository.deleteById(reservationId);
     }
 
     private ReservationDto mapToDto(Reservation r) {
@@ -84,8 +79,7 @@ public class ParkingService {
                 r.getParkingSpot().getSpotNumber(),
                 r.getApplicantName(),
                 r.getStartTime(),
-                r.getEndTime(),
-                r.isCancelled()
+                r.getEndTime()
         );
     }
 }

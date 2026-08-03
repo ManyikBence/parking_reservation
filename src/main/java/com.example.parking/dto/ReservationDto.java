@@ -8,6 +8,5 @@ public record ReservationDto(
         String spotNumber,
         String applicantName,
         LocalDateTime startTime,
-        LocalDateTime endTime,
-        boolean cancelled
+        LocalDateTime endTime
 ) {}

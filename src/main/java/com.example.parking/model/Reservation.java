@@ -24,9 +24,6 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDateTime endTime;
 
-    @Column(nullable = false)
-    private boolean cancelled = false;
-
     public Reservation() {}
 
     public Reservation(ParkingSpot parkingSpot, String applicantName, LocalDateTime startTime, LocalDateTime endTime) {
@@ -34,7 +31,6 @@ public class Reservation {
         this.applicantName = applicantName;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.cancelled = false;
     }
 
     public Long getId() { return id; }
@@ -47,6 +43,4 @@ public class Reservation {
     public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
     public LocalDateTime getEndTime() { return endTime; }
     public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
-    public boolean isCancelled() { return cancelled; }
-    public void setCancelled(boolean cancelled) { this.cancelled = cancelled; }
 }

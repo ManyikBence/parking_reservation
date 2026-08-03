@@ -50,7 +50,6 @@ class ParkingServiceTest {
 
         assertNotNull(dto.id());
         assertEquals("Nagy Anna", dto.applicantName());
-        assertFalse(dto.cancelled());
     }
 
     @Test
