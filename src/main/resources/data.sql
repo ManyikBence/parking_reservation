@@ -6,7 +6,3 @@ INSERT INTO parking_spots (id, spot_number, spot_type, description) VALUES (4, '
 -- A kezdő foglalás beszúrása explicit ID nélkül:
 INSERT INTO reservations (parking_spot_id, applicant_name, start_time, end_time, cancelled)
 VALUES (1, 'Kovács Péter', '2026-08-10 08:00:00', '2026-08-10 16:00:00', false);
-
--- A sequence számlálók igazítása az inicializált adatokhoz:
-SELECT setval('parking_spots_id_seq', (SELECT MAX(id) FROM parking_spots));
-SELECT setval('reservations_id_seq', (SELECT MAX(id) FROM reservations));

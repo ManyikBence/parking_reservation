@@ -1,18 +1,19 @@
 services:
-  postgres:
-    image: postgres:16-alpine
+  mysql:
+    image: mysql:8.0
     container_name: parking-db
     environment:
-      POSTGRES_DB: parkingdb
-      POSTGRES_USER: parkinguser
-      POSTGRES_PASSWORD: parkingpassword
+      MYSQL_DATABASE: parkingdb
+      MYSQL_USER: parkinguser
+      MYSQL_PASSWORD: parkingpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
     ports:
-      - "5432:5432"
+      - "3306:3306"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U parkinguser -d parkingdb"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   backend:
     build: .
@@ -20,9 +21,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/parkingdb
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/parkingdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: parkinguser
       SPRING_DATASOURCE_PASSWORD: parkingpassword
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
